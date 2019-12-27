@@ -11,8 +11,15 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('main');
+});
+
+Route::get('/test', function () {
+    broadcast(new \App\Events\MatchStarted('test'));
+//    event(new \App\Events\MatchStarted('init'));
 });
 
 Auth::routes();
