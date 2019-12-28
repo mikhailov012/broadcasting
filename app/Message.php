@@ -4,6 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property $user_id
+ * @property $message
+ *
+ * Class Message
+ * @package App
+ */
 class Message extends Model
 {
     protected $fillable = [

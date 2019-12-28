@@ -30,11 +30,11 @@ class ChatMessage implements ShouldBroadcast
     }
 
     /**
-     * @return Channel|Channel[]
+     * @return Channel|Channel[]|PresenceChannel
      */
     public function broadcastOn()
     {
-        return new Channel('chat');
+        return new PresenceChannel('chat');
     }
 
     public function broadcastWith()

@@ -31,10 +31,12 @@ Route::get('/test', function () {
         ]);
 
 //        event(new ChatMessage($message->fresh()));
-        broadcast(new ChatMessage($message->fresh()));
+        broadcast(new ChatMessage($message->fresh()))->toOthers();
     }
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('/send-message', 'MessageController@send');

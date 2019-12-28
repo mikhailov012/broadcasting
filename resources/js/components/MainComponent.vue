@@ -2,23 +2,99 @@
 
     <div>
         <div class="container">
-            Main Component
+
+            <h5>Чат</h5>
+
+            <div class="messages">
+
+                <template v-if="messages.length">
+                    <template v-for="msg in messages">
+                        <div class="message">
+                            {{msg}}
+                        </div>
+                    </template>
+                </template>
+                <template v-else>
+                    <div><b>Нет сообщений</b></div>
+                </template>
+
+            </div>
+
+            <div class="chat-form">
+
+                <h5>Введите сообщение</h5>
+
+                <div class="chat-form-block">
+                    <div class="form-group">
+                        <textarea class="form-control" @input="updMsg">{{message}}</textarea>
+                    </div>
+                </div>
+
+                <div class="chat-bot-buttons">
+                    <div class="btn btn-info" @click="sendMessage">Отправить</div>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
 </template>
 
 <script>
+
+    import {mapState, mapActions, mapMutations, mapGetters} from 'vuex'
+
     export default {
         name: "MainComponent",
         components: {},
         data() {
             return {
-
+                wait: false
             }
         },
-        computed: {},
-        methods: {},
+        computed: {
+            ...mapState([
+                'message',
+                'user',
+                'users',
+                'messages'
+            ])
+        },
+        methods: {
+            ...mapMutations([
+                'updateUsers',
+                'addUser',
+                'removeUser',
+                'updateMessage',
+                'addMessageToList'
+            ]),
+
+            ...mapActions([
+                'SEND_MESSAGE'
+            ]),
+
+            sendMessage() {
+                if (!this.wait) {
+                    this.wait = true
+
+                    this.SEND_MESSAGE()
+                        .then((response) => {
+                            this.updateMessage(null)
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                        .finally(() => {
+                            this.wait = false
+                        })
+                }
+            },
+
+            updMsg(e) {
+                this.updateMessage(e.target.value)
+            }
+        },
         watch: {},
         created() {
 
@@ -28,36 +104,49 @@
         mounted() {
             console.log('mounted')
 
-            // Echo.join('broadcasting')
-            //     .here((users) => {
-            //         console.log('here')
-            //         console.log(users)
-            //     })
-            //     .joining((user) => {
-            //         console.log('joining')
-            //         console.log(user)
-            //     })
-            //     .leaving((user) => {
-            //         console.log('leaving')
-            //         console.log(user)
-            //     })
-            //     .listen('message_pushed', (e) => {
-            //         console.log('listen message pushed')
-            //         console.log(e)
-            //     })
-            //     .notification((e) => {
-            //         console.log('notification')
-            //         console.log(e)
-            //     })
+            let self = this
 
-            Echo.channel('laravel_database_chat')
-                .listen('ChatMessage', (e) => {
-                    console.log(e)
+            Echo.join('chat')
+                .here((users) => {
+                    console.log('here')
+                    self.updateUsers(users)
+                })
+                .joining((user) => {
+                    console.log('joining')
+                    self.addUser(user)
+                })
+                .leaving((user) => {
+                    console.log('leaving')
+                    self.removeUser(user)
+                })
+                .listen('ChatMessage', (r) => {
+                    console.log('listen ChatMessage')
+                    console.log(r)
+                    this.addMessageToList(r.message)
+                })
+                .notification((n) => {
+                    console.log(n)
+                })
+                .listenForWhisper('typing', (r) => {
+                    console.log(r)
                 })
         }
     }
 </script>
 
-<style scoped>
+<style type="text/scss">
+    .messages, .chat-form {
+        width: 100%;
+        height: calc(50vh - 105px);
+    }
 
+    .messages {
+        .message {
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
 </style>
