@@ -24,25 +24,48 @@
 
             console.log('created')
 
-            Echo.private('broadcasting')
-                .listen('MessagePushed', (e) => {
-                    console.log(e)
-                })
+        },
+        mounted() {
+            console.log('mounted')
 
             // Echo.join('broadcasting')
             //     .here((users) => {
+            //         console.log('here')
             //         console.log(users)
             //     })
             //     .joining((user) => {
+            //         console.log('joining')
             //         console.log(user)
             //     })
             //     .leaving((user) => {
+            //         console.log('leaving')
             //         console.log(user)
             //     })
+            //     .listen('message_pushed', (e) => {
+            //         console.log('listen message pushed')
+            //         console.log(e)
+            //     })
+            //     .notification((e) => {
+            //         console.log('notification')
+            //         console.log(e)
+            //     })
 
-        },
-        mounted() {
-
+            Echo.join('chat')
+                .here((users) => {
+                    console.log('here')
+                    console.log(users)
+                })
+                .joining((user) => {
+                    console.log('joining')
+                    console.log(user)
+                })
+                .leaving((user) => {
+                    console.log('leaving')
+                    console.log(user)
+                })
+                .listen('ChatMessage', (e) => {
+                    console.log(e)
+                })
         }
     }
 </script>

@@ -18,9 +18,6 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        'App\Events\MessagePushed' => [
-            'App\Listeners\SendPushNotification'
-        ]
     ];
 
     /**
@@ -35,8 +32,8 @@ class EventServiceProvider extends ServiceProvider
         //
     }
 
-    public function shouldDiscoverEvents()
-    {
-        return true;
-    }
+//    public function shouldDiscoverEvents()
+//    {
+//        return true;
+//    }
 }

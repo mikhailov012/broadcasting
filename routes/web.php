@@ -11,6 +11,7 @@
 |
 */
 
+use App\Events\ChatMessage;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,7 +19,19 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-    event(new \App\Events\MessagePushed('test'));
+
+    /** @var \App\User $user */
+    $user = \Illuminate\Support\Facades\Auth::user();
+
+    if ($user) {
+
+        /** @var \App\Message $message */
+        $message = $user->messages()->create([
+            'message' => rand(1, 99999)
+        ]);
+
+        event(new ChatMessage($message->fresh()));
+    }
 });
 
 Auth::routes();

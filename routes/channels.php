@@ -14,10 +14,19 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
+//Broadcast::channel('App.User.{id}', function ($user, $id) {
+//    return (int) $user->id === (int) $id;
+//});
 
-Broadcast::channel('broadcasting', function ($user) {
-    return true;
+//Broadcast::channel('broadcasting', function ($user) {
+//    return [
+//        'user' => $user
+//    ];
+//});
+
+//Broadcast::routes(['middleware' => ['web', 'auth']]);
+Broadcast::channel('chat', function ($user) {
+    return [
+        $user
+    ];
 });
