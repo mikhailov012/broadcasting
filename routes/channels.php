@@ -18,6 +18,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('spooortx', function($user) {
+Broadcast::channel('broadcasting', function ($user) {
     return true;
 });

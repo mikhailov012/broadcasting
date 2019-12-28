@@ -18,8 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-    broadcast(new \App\Events\MatchStarted('test'));
-//    event(new \App\Events\MatchStarted('init'));
+    event(new \App\Events\MessagePushed('test'));
 });
 
 Auth::routes();

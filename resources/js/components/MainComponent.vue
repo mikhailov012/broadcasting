@@ -22,12 +22,27 @@
         watch: {},
         created() {
 
-        },
-        mounted() {
-            Echo.channel('spooortx')
-                .listen('matchStarted', (e) => {
+            console.log('created')
+
+            Echo.private('broadcasting')
+                .listen('MessagePushed', (e) => {
                     console.log(e)
                 })
+
+            // Echo.join('broadcasting')
+            //     .here((users) => {
+            //         console.log(users)
+            //     })
+            //     .joining((user) => {
+            //         console.log(user)
+            //     })
+            //     .leaving((user) => {
+            //         console.log(user)
+            //     })
+
+        },
+        mounted() {
+
         }
     }
 </script>
