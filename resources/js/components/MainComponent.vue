@@ -50,19 +50,7 @@
             //         console.log(e)
             //     })
 
-            Echo.join('chat')
-                .here((users) => {
-                    console.log('here')
-                    console.log(users)
-                })
-                .joining((user) => {
-                    console.log('joining')
-                    console.log(user)
-                })
-                .leaving((user) => {
-                    console.log('leaving')
-                    console.log(user)
-                })
+            Echo.channel('laravel_database_chat')
                 .listen('ChatMessage', (e) => {
                     console.log(e)
                 })

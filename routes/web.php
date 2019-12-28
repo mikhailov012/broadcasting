@@ -30,7 +30,8 @@ Route::get('/test', function () {
             'message' => rand(1, 99999)
         ]);
 
-        event(new ChatMessage($message->fresh()));
+//        event(new ChatMessage($message->fresh()));
+        broadcast(new ChatMessage($message->fresh()));
     }
 });
 
