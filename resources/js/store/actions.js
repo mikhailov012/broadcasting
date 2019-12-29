@@ -7,7 +7,7 @@ export default {
                 .then((response) => {
                     let data = response.data
 
-                    commit('addMessageToList', data.message)
+                    commit('addMessageToList', {name: 'You', message: data.message})
                     resolve(response)
                 })
                 .catch((error) => {

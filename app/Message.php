@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property $user_id
  * @property $message
  *
+ * @property-read User $user
+ *
  * Class Message
  * @package App
  */

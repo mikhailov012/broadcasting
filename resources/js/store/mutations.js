@@ -22,7 +22,7 @@ export default {
         state.message = message
     },
 
-    addMessageToList(state, message) {
-        state.messages.push(message)
+    addMessageToList(state, data) {
+        state.messages.push({name: data.name, message: data.message})
     }
 }

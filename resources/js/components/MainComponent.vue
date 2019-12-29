@@ -5,12 +5,17 @@
 
             <h5>Чат</h5>
 
+            <div class="online-users">
+                <div class="online-users-title">Online:</div>
+                <div class="online-users-user" v-for="user in users">{{user.name}}</div>
+            </div>
+
             <div class="messages">
 
                 <template v-if="messages.length">
                     <template v-for="msg in messages">
                         <div class="message">
-                            {{msg}}
+                            <b>{{msg.name}}:</b> {{msg.message}}
                         </div>
                     </template>
                 </template>
@@ -163,11 +168,12 @@
                 .leaving((user) => {
                     console.log('leaving')
                     self.removeUser(user)
+                    this.$forceUpdate()
                 })
                 .listen('ChatMessage', (r) => {
                     console.log('listen ChatMessage')
                     console.log(r)
-                    self.addMessageToList(r.message)
+                    self.addMessageToList({name: r.name, message: r.message})
                 })
                 .notification((n) => {
                     console.log(n)
@@ -193,15 +199,33 @@
     }
 </script>
 
-<style type="text/scss">
+<style lang="scss">
     .messages, .chat-form {
         width: 100%;
         height: calc(50vh - 105px);
     }
 
+    .online-users {
+        display: flex;
+        margin-bottom: 5px;
+
+        &-title {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        &-user {
+            margin-right: 5px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
     .messages {
         .message {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
 
             &:last-child {
                 margin-bottom: 0;

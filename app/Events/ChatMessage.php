@@ -40,6 +40,7 @@ class ChatMessage implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
+            'name' => $this->message->user->name,
             'message' => $this->message->message
         ];
     }
