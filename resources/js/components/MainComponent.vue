@@ -26,7 +26,11 @@
 
                 <div class="chat-form-block">
                     <div class="form-group">
-                        <textarea class="form-control" @input="updMsg">{{message}}</textarea>
+                        <!--<input class="form-control" @input="updMsg" :value="message">-->
+                        <textarea class="form-control" @input="updMsg" @keydown="isTyping" @keyup="noTyping" @keyup.enter="sendMessage" :value="message"></textarea>
+                    </div>
+                    <div v-if="typing" style="margin-bottom: 10px">
+                        {{typingUser}} печатает сообщение...
                     </div>
                 </div>
 
@@ -50,7 +54,12 @@
         components: {},
         data() {
             return {
-                wait: false
+                wait: false,
+                privateChannel: null,
+                typingUser: null,
+                typing: false,
+                userName: null,
+                userId: null
             }
         },
         computed: {
@@ -92,7 +101,30 @@
             },
 
             updMsg(e) {
+
                 this.updateMessage(e.target.value)
+            },
+
+            isTyping() {
+
+                setTimeout(() => {
+                    this.privateChannel
+                        .whisper('typing', {
+                            user: this.userName,
+                            typing: true
+                        })
+                }, 300)
+
+            },
+
+            noTyping() {
+                // setTimeout(() => {
+                //     this.privateChannel
+                //         .whisper('typing', {
+                //             user: 'test',
+                //             typing: false
+                //         })
+                // }, 300)
             }
         },
         watch: {},
@@ -100,9 +132,22 @@
 
             console.log('created')
 
+            let block = document.querySelector('#parent-main'),
+                data = JSON.parse(block.dataset.userdata)
+
+            if (data.id) {
+                this.userId = data.id
+            }
+
+            if (data.name) {
+                this.userName = data.name
+            }
+
         },
         mounted() {
             console.log('mounted')
+
+            this.privateChannel = Echo.private('chat')
 
             let self = this
 
@@ -122,13 +167,27 @@
                 .listen('ChatMessage', (r) => {
                     console.log('listen ChatMessage')
                     console.log(r)
-                    this.addMessageToList(r.message)
+                    self.addMessageToList(r.message)
                 })
                 .notification((n) => {
                     console.log(n)
                 })
-                .listenForWhisper('typing', (r) => {
-                    console.log(r)
+
+            this.privateChannel
+                .listenForWhisper('typing', (e) => {
+
+                    let typingUser = e.user,
+                        typing = e.typing
+
+                    if (this.typingUser !== typingUser && this.typing !== typing) {
+                        this.typingUser = e.user
+                        this.typing = e.typing
+
+                        setTimeout(() => {
+                            this.typingUser = null
+                            this.typing = false
+                        }, 900)
+                    }
                 })
         }
     }

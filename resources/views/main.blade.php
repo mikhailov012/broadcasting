@@ -2,6 +2,8 @@
 
 @section('content')
 
-    <div id="main"></div>
+    <div id="parent-main" data-userdata="{{json_encode($data)}}">
+        <div id="main"></div>
+    </div>
 
 @endsection

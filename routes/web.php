@@ -14,9 +14,7 @@
 use App\Events\ChatMessage;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('main');
-});
+Route::get('/', 'MainController@index');
 
 Route::get('/test', function () {
 
@@ -36,7 +34,5 @@ Route::get('/test', function () {
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/send-message', 'MessageController@send');
