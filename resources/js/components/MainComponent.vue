@@ -130,6 +130,51 @@
                 //             typing: false
                 //         })
                 // }, 300)
+            },
+
+            echoInit() {
+                this.privateChannel = Echo.private('chat')
+
+                let self = this
+
+                Echo.join('chat')
+                    .here((users) => {
+                        console.log('here')
+                        self.updateUsers(users)
+                    })
+                    .joining((user) => {
+                        console.log('joining')
+                        self.addUser(user)
+                    })
+                    .leaving((user) => {
+                        console.log('leaving')
+                        self.removeUser(user)
+                    })
+                    .listen('ChatMessage', (r) => {
+                        console.log('listen ChatMessage')
+                        console.log(r)
+                        self.addMessageToList({name: r.name, message: r.message})
+                    })
+                    .notification((n) => {
+                        console.log(n)
+                    })
+
+                this.privateChannel
+                    .listenForWhisper('typing', (e) => {
+
+                        let typingUser = e.user,
+                            typing = e.typing
+
+                        if (this.typingUser !== typingUser && this.typing !== typing) {
+                            this.typingUser = e.user
+                            this.typing = e.typing
+
+                            setTimeout(() => {
+                                this.typingUser = null
+                                this.typing = false
+                            }, 900)
+                        }
+                    })
             }
         },
         watch: {},
@@ -152,49 +197,9 @@
         mounted() {
             console.log('mounted')
 
-            this.privateChannel = Echo.private('chat')
-
-            let self = this
-
-            Echo.join('chat')
-                .here((users) => {
-                    console.log('here')
-                    self.updateUsers(users)
-                })
-                .joining((user) => {
-                    console.log('joining')
-                    self.addUser(user)
-                })
-                .leaving((user) => {
-                    console.log('leaving')
-                    self.removeUser(user)
-                    this.$forceUpdate()
-                })
-                .listen('ChatMessage', (r) => {
-                    console.log('listen ChatMessage')
-                    console.log(r)
-                    self.addMessageToList({name: r.name, message: r.message})
-                })
-                .notification((n) => {
-                    console.log(n)
-                })
-
-            this.privateChannel
-                .listenForWhisper('typing', (e) => {
-
-                    let typingUser = e.user,
-                        typing = e.typing
-
-                    if (this.typingUser !== typingUser && this.typing !== typing) {
-                        this.typingUser = e.user
-                        this.typing = e.typing
-
-                        setTimeout(() => {
-                            this.typingUser = null
-                            this.typing = false
-                        }, 900)
-                    }
-                })
+            if (this.userId) {
+                this.echoInit()
+            }
         }
     }
 </script>

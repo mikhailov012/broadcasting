@@ -3,9 +3,11 @@ import store from './../../store/index'
 
 import Main from './../../components/MainComponent'
 
-const eca = new Vue({
-    el: '#main',
-    store,
-    components: { Main },
-    template: '<Main/>'
-})
+if (document.querySelector('#main')) {
+    const eca = new Vue({
+        el: '#main',
+        store,
+        components: { Main },
+        template: '<Main/>'
+    })
+}

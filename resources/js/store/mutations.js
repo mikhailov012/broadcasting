@@ -8,14 +8,9 @@ export default {
     },
 
     removeUser(state, user) {
-
-        let users = state.users;
-
-        _.remove(users, (u, i) => {
+        state.users = _.reject(state.users, (u) => {
             return u.id === user.id
         })
-
-        state.users = users
     },
 
     updateMessage(state, message) {
